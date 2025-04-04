@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Who Am I ?</h1>
+    <p>Username: {{ app.user.userIdentifier }}</p>
+    <p>Roles: {{ dump(app.user.roles) }}</p>
+{% endblock %}
