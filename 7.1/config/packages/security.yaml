@@ -16,7 +16,8 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
-                enable_csrf: true
+                default_target_path: who_am_i
+                always_use_default_target_path: true
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
@@ -24,8 +25,10 @@ security:
                     doctrine: true
             logout:
                 path: /logout
+                target: app_login
     access_control:
         - { path: '^/$', roles: ROLE_USER }
+        - { path: '^/who-am-i$', roles: ROLE_USER }
         - { path: '^/admin', roles: ROLE_ADMIN }
         - { path: '^/super-admin', roles: ROLE_SUPER_ADMIN }
     role_hierarchy:

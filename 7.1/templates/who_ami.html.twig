@@ -3,5 +3,10 @@
 {% block body %}
     <h1>Who Am I ?</h1>
     <p>Username: {{ app.user.userIdentifier }}</p>
-    <p>Roles: {{ dump(app.user.roles) }}</p>
+    <p>Roles:</p>
+    <ul>
+        {% for role in app.user.roles %}
+            <li>{{ role }}</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

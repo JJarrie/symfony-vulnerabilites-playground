@@ -1,9 +1,24 @@
 # Symfony 7.1 
 
-## Setup & Run
+## How to use
+
+### Requirements
+
+- [ ] PHP 8.4
+- [ ] Composer
+- [ ] Docker
+- [ ] Symfony CLI
+
+### Setup
 
 ```bash
+composer install
 docker compose up
+```
+
+### Run 
+
+```bash
 symfony serve
 symfony console doctrine:migrations:migrate
 symfony console doctrine:fixtures:load
