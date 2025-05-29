@@ -19,6 +19,7 @@
         "symfony/flex": "^2",
         "symfony/form": "7.1.*",
         "symfony/framework-bundle": "7.1.*",
+        "symfony/mime": "7.1.*",
         "symfony/runtime": "7.1.*",
         "symfony/security-bundle": "7.1.6",
         "symfony/security-http": "7.1.7",

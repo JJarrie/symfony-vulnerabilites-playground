@@ -94,12 +94,19 @@ help: ## Outputs this help screen
 build: ## Build the Docker images
 	@COMPOSE_FILES=$(DOCKER_COMPOSE_FILES) $(DOCKER_COMPOSE) build --pull --parallel
 
+install: build start vendor assets/install database/setup database/load ## Build & setup the projet, then start it
 
-up: ## Start the docker stack
-	@COMPOSE_FILES=$(DOCKER_COMPOSE_FILES) $(DOCKER_COMPOSE) up -d
+start: ## Start the docker stack
+	@COMPOSE_FILES=$(DOCKER_COMPOSE_FILES) $(DOCKER_COMPOSE) up
 
-down: ## Stop the docker stack
+stop: ## Stop the docker stack
 	@COMPOSE_FILES=$(DOCKER_COMPOSE_FILES) $(DOCKER_COMPOSE) down --remove-orphans
+
+bash/php: ## Open a bash terminal in PHP container
+	@${PHP_CONTAINER} bash
+
+bash/nginx: ## Open a bash terminal in Nginx container
+	@COMPOSE_FILE=$(DOCKER_COMPOSE_FILES) $(DOCKER_COMPOSE) exec $(TTY) nginx bash
 
 
 ##@ Composer
@@ -139,15 +146,15 @@ phpstan: ## Run PHPStan
 .PHONY: test test/unit test/functional
 
 test: ## Run all tests
-	@${MAKE} test/functional
+	@${PHP} ${PHPUNIT_INI_CONFIGURATION} bin/phpunit ${PHPUNIT_ARGS}
 
 test/unit: ## Run unit tests
-	@${PHP} ${PHPUNIT_INI_CONFIGURATION} bin/phpunit --testsuite=Unit ${PHPUNIT_ARGS}
+	@${PHP} ${PHPUNIT_INI_CONFIGURATION} bin/phpunit --testsuite=unit ${PHPUNIT_ARGS}
 
 test/integration: ## Run integration tests
 	@$(MAKE) -s database/setup env=test
 	@$(MAKE) -s database/load env=test
-	@${PHP} ${PHPUNIT_INI_CONFIGURATION} bin/phpunit --testsuite=Integration ${PHPUNIT_ARGS}
+	@${PHP} ${PHPUNIT_INI_CONFIGURATION} bin/phpunit --testsuite=integration ${PHPUNIT_ARGS}
 
 
 ##@ Asset Mapper
@@ -185,3 +192,9 @@ database/setup: ## Create and set schema at last migration
 database/load: ## Load fixtures in database
 	@$(eval env ?= "dev")
 	@${CONSOLE} doctrine:fixtures:load -n -e ${env}
+
+##@ Symfony console
+
+console: ## Run a Symfony console command (ex: make console c="exploit:CVE-2024-51996")
+	@$(eval c ?=)
+	@${PHP_CONTAINER} bin/console ${c}

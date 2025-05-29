@@ -12,3 +12,7 @@ services:
     ports:
       - "443:443"
       - "80:80"
+
+  nginx:
+    labels:
+      - "traefik.http.routers.nginx.rule=Host(`ssp.docker.localhost`)"

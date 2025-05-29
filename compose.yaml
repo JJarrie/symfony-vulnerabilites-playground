@@ -35,7 +35,7 @@ services:
       - php
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app.tls=true"
+      - "traefik.http.routers.nginx.tls=true"
 
   traefik:
     image: traefik:v3.4

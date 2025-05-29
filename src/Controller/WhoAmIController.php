@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/', name: 'who_am_i', methods: ['GET'])]
+#[Route('/who-am-i', name: 'who_am_i', methods: ['GET'])]
 #[Route('/', name: 'app_home', methods: ['GET'])]
 class WhoAmIController extends AbstractController
 {
