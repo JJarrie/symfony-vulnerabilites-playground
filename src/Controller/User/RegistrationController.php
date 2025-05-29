@@ -20,16 +20,16 @@ class RegistrationController extends AbstractController
         $registrationForm = $this->createForm(RegistrationFormType::class, $user);
         $registrationForm->handleRequest($request);
 
-        if ($registrationForm->isSubmitted()) {
-            if ($registrationForm->isValid()) {
-                $plainTextPassword = $registrationForm['password']?->getData();
-                if (\is_string($plainTextPassword)) {
-                    $password = $hasher->hashPassword($user, $plainTextPassword);
-                    $user->password = $password;
+        if ($registrationForm->isSubmitted() && $registrationForm->isValid()) {
+            $plainTextPassword = $registrationForm['password']?->getData();
+            if (\is_string($plainTextPassword)) {
+                $password = $hasher->hashPassword($user, $plainTextPassword);
+                $user->password = $password;
 
-                    $entityManager->persist($user);
-                    $entityManager->flush();
-                }
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_login');
             }
         }
 

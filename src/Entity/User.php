@@ -29,10 +29,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         set => $this->username = $value;
     }
 
-    /** @var array<int, string> */
     #[ORM\Column(type: 'json')]
     public array $roles = [] {
-        get => $this->roles;
+        get {
+            $this->roles[] = 'ROLE_USER';
+
+            return array_unique($this->roles);
+        }
         set => $this->roles = $value;
     }
 

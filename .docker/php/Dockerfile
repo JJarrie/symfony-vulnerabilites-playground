@@ -5,11 +5,12 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 RUN apk add --no-cache bash
 
-RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.alpine.sh' | bash
-RUN apk add symfony-cli
-
 RUN install-php-extensions apcu opcache pdo_pgsql intl zip
 
 WORKDIR /srv/app
+
+FROM php_base AS php_dev
+
+RUN install-php-extensions xdebug
 
 CMD ["php-fpm"]
