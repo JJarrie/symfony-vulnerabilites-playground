@@ -34,4 +34,4 @@ phpstan.neon
 ###< friendsofphp/php-cs-fixer ###
 
 /compose.override.yaml
-/../.idea
+/.idea/

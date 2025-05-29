@@ -7,7 +7,7 @@ return new PhpCsFixer\Config()
         '@Symfony:risky' => true,
     ])
     ->setFinder(new PhpCsFixer\Finder()
-        ->in(__DIR__.'/src')
+        ->in(__DIR__ . '/src')
         ->exclude('var')
     )
     ->setCacheFile('.php-cs-fixer.cache');
