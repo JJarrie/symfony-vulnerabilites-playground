@@ -1,0 +1,344 @@
+{# templates/form/bulma_layout.html.twig #}
+
+{# Form widget container #}
+{% block form_start -%}
+    {%- do form.setMethodRendered() -%}
+    {% set method = method|upper %}
+    {%- if method in ["GET", "POST"] -%}
+        {% set form_method = method %}
+    {%- else -%}
+        {% set form_method = "POST" %}
+    {%- endif -%}
+    <form{% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    {%- if form_method != method -%}
+        <input type="hidden" name="_method" value="{{ method }}" />
+    {%- endif -%}
+{%- endblock form_start %}
+
+{# Form row #}
+{% block form_row -%}
+    <div class="field">
+        {{- form_label(form) -}}
+        {% set has_left_icon = form.vars.attr['data-icon-left'] is defined %}
+        {% set has_right_icon = form.vars.attr['data-icon-right'] is defined %}
+        <div class="control{% if has_left_icon %} has-icons-left{% endif %}{% if has_right_icon or errors|length > 0 %} has-icons-right{% endif %}">
+            {{- form_widget(form) -}}
+            {%- if has_left_icon -%}
+                <span class="icon is-small is-left">
+                    <i class="{{ form.vars.attr['data-icon-left'] }}"></i>
+                </span>
+            {%- endif -%}
+            {%- if has_right_icon -%}
+                <span class="icon is-small is-right">
+                    <i class="{{ form.vars.attr['data-icon-right'] }}"></i>
+                </span>
+            {%- endif -%}
+            {%- if errors|length > 0 -%}
+                <span class="icon is-small is-right">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </span>
+            {%- endif -%}
+        </div>
+        {{- form_help(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{%- endblock form_row %}
+
+{# Form label #}
+{% block form_label -%}
+    {% if label is not same as(false) -%}
+        {% if not compound -%}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {%- endif -%}
+        {% if required -%}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' label')}) %}
+        {% else %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' label')}) %}
+        {%- endif -%}
+        {% if label is empty -%}
+            {%- if label_format is not empty -%}
+                {% set label = label_format|replace({
+                    '%name%': name,
+                    '%id%': id,
+                }) %}
+            {%- else -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+        {%- endif -%}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {{ translation_domain is same as(false) ? label : label|trans(label_translation_parameters, translation_domain) }}
+        {%- if required -%}
+            <span class="has-text-danger">&nbsp;*</span>
+        {%- endif -%}
+        </label>
+    {%- endif -%}
+{%- endblock form_label %}
+
+{# Form errors #}
+{% block form_errors -%}
+    {%- if errors|length > 0 -%}
+        {%- for error in errors -%}
+            <p class="help is-danger">{{ error.message }}</p>
+        {%- endfor -%}
+    {%- endif -%}
+{%- endblock form_errors %}
+
+{# Form help #}
+{% block form_help -%}
+    {%- if help is not empty -%}
+        <p class="help">{{ translation_domain is same as(false) ? help : help|trans(help_translation_parameters, translation_domain) }}</p>
+    {%- endif -%}
+{%- endblock form_help %}
+
+{# Text input #}
+{% block form_widget_simple -%}
+    {% set type = type|default('text') %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' input' ~ (errors|length > 0 ? ' is-danger' : ''))}) %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock form_widget_simple %}
+
+{# Textarea #}
+{% block textarea_widget -%}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' textarea' ~ (errors|length > 0 ? ' is-danger' : ''))}) %}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+{%- endblock textarea_widget %}
+
+{# Email input #}
+{% block email_widget -%}
+    {% set type = type|default('email') %}
+    {{ block('form_widget_simple') }}
+{%- endblock email_widget %}
+
+{# Password input #}
+{% block password_widget -%}
+    {% set type = type|default('password') %}
+    {{ block('form_widget_simple') }}
+{%- endblock password_widget %}
+
+{# Number input #}
+{% block number_widget -%}
+    {% set type = type|default('number') %}
+    {{ block('form_widget_simple') }}
+{%- endblock number_widget %}
+
+{# Select dropdown #}
+{% block choice_widget_collapsed -%}
+    {% set has_left_icon = attr['data-icon-left'] is defined %}
+    {% set has_right_icon = attr['data-icon-right'] is defined %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' select')}) %}
+    <div class="select{% if multiple %} is-multiple{% endif %}{% if errors|length > 0 %} is-danger{% endif %}">
+        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+            {%- if placeholder is not empty -%}
+                <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) : '' }}</option>
+            {%- endif -%}
+            {%- if preferred_choices|length > 0 -%}
+                {% set options = preferred_choices %}
+                {{- block('choice_widget_options') -}}
+                {%- if choices|length > 0 and separator is not none -%}
+                    <option disabled="disabled">{{ separator }}</option>
+                {%- endif -%}
+            {%- endif -%}
+            {%- set options = choices -%}
+            {{- block('choice_widget_options') -}}
+        </select>
+    </div>
+    {%- if has_left_icon -%}
+        <span class="icon is-small is-left">
+            <i class="{{ attr['data-icon-left'] }}"></i>
+        </span>
+    {%- endif -%}
+    {%- if has_right_icon -%}
+        <span class="icon is-small is-right">
+            <i class="{{ attr['data-icon-right'] }}"></i>
+        </span>
+    {%- endif -%}
+{%- endblock choice_widget_collapsed %}
+
+{# Checkboxes and radios expanded #}
+{% block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            <div class="field">
+                <div class="control">
+                    {{- form_widget(child) -}}
+                    {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+                </div>
+            </div>
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded %}
+
+{# Single checkbox #}
+{% block checkbox_widget -%}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' is-checkradio')}) %}
+    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock checkbox_widget %}
+
+{# Single radio button #}
+{% block radio_widget -%}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' is-checkradio')}) %}
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock radio_widget %}
+
+{# File input #}
+{% block file_widget -%}
+    <div class="file{% if errors|length > 0 %} is-danger{% endif %}">
+        <label class="file-label">
+            <input class="file-input" type="file" {{ block('widget_attributes') }} />
+            <span class="file-cta">
+                <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                    {{ translation_domain is same as(false) ? 'Choose a file...' : 'Choose a file...'|trans({}, translation_domain) }}
+                </span>
+            </span>
+        </label>
+    </div>
+{%- endblock file_widget %}
+
+{# Button #}
+{% block button_widget -%}
+    {%- if label is empty -%}
+        {%- if label_format is not empty -%}
+            {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+            }) %}
+        {%- elseif label is same as(false) -%}
+            {% set translation_domain = false %}
+        {%- else -%}
+            {% set label = name|humanize %}
+        {%- endif -%}
+    {%- endif -%}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' button')}) %}
+    <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ translation_domain is same as(false) ? label : label|trans(label_translation_parameters, translation_domain) }}</button>
+{%- endblock button_widget %}
+
+{# Submit button #}
+{% block submit_widget -%}
+    {% set type = type|default('submit') %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' button is-primary')}) %}
+    {{ block('button_widget') }}
+{%- endblock submit_widget %}
+
+{# Reset button #}
+{% block reset_widget -%}
+    {% set type = type|default('reset') %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' button is-light')}) %}
+    {{ block('button_widget') }}
+{%- endblock reset_widget %}
+
+{# Date widget #}
+{% block date_widget -%}
+    {%- if widget == 'single_text' -%}
+        {% set type = type|default('date') %}
+        {{ block('form_widget_simple') }}
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{- date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month),
+                '{{ day }}':   form_widget(form.day),
+            })|raw -}}
+        </div>
+    {%- endif -%}
+{%- endblock date_widget %}
+
+{# Time widget #}
+{% block time_widget -%}
+    {%- if widget == 'single_text' -%}
+        {% set type = type|default('time') %}
+        {{ block('form_widget_simple') }}
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_widget(form.hour) }}{% if with_minutes %}:{{ form_widget(form.minute) }}{% endif %}{% if with_seconds %}:{{ form_widget(form.second) }}{% endif %}
+        </div>
+    {%- endif -%}
+{%- endblock time_widget %}
+
+{# DateTime widget #}
+{% block datetime_widget -%}
+    {%- if widget == 'single_text' -%}
+        {% set type = type|default('datetime-local') %}
+        {{ block('form_widget_simple') }}
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            <div class="columns">
+                <div class="column">
+                    {{ form_widget(form.date) }}
+                </div>
+                <div class="column">
+                    {{ form_widget(form.time) }}
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+{%- endblock datetime_widget %}
+
+{# Range widget #}
+{% block range_widget -%}
+    {% set type = type|default('range') %}
+    {% set attr = attr|merge({'class': (attr.class|default('') ~ ' slider is-fullwidth')}) %}
+    {{ block('form_widget_simple') }}
+{%- endblock range_widget %}
+
+{# Collection widget #}
+{% block collection_widget -%}
+    {%- if prototype is defined and not prototype.rendered -%}
+        {%- set attr = attr|merge({'data-prototype': form_row(prototype) }) -%}
+    {%- endif -%}
+    {{- block('form_widget') -}}
+{%- endblock collection_widget %}
+
+{# Hidden widget #}
+{% block hidden_widget -%}
+    {% set type = type|default('hidden') %}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock hidden_widget %}
+
+{#
+UTILISATION DES ICÔNES :
+
+1. Dans votre FormType PHP :
+$builder
+    ->add('email', EmailType::class, [
+        'label' => 'Email',
+        'attr' => [
+            'data-icon-left' => 'fas fa-envelope',
+            'placeholder' => 'votre@email.com'
+        ]
+    ])
+    ->add('password', PasswordType::class, [
+        'label' => 'Mot de passe',
+        'attr' => [
+            'data-icon-left' => 'fas fa-lock',
+            'data-icon-right' => 'fas fa-eye',
+            'placeholder' => 'Votre mot de passe'
+        ]
+    ])
+    ->add('search', SearchType::class, [
+        'label' => 'Recherche',
+        'attr' => [
+            'data-icon-right' => 'fas fa-search'
+        ]
+    ]);
+
+2. Ou directement dans Twig :
+{{ form_widget(form.username, {
+    'attr': {
+        'data-icon-left': 'fas fa-user',
+        'placeholder': 'Nom d\'utilisateur'
+    }
+}) }}
+
+3. Classes d'icônes supportées :
+- Font Awesome : fas fa-user, fas fa-envelope, fas fa-lock...
+- Bulma Icons : icon-user, icon-email...
+- Toute autre classe d'icône CSS
+
+4. Positions disponibles :
+- data-icon-left : icône à gauche
+- data-icon-right : icône à droite
+- Les deux peuvent être utilisées simultanément
+#}

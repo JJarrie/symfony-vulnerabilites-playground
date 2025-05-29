@@ -1,0 +1,37 @@
+<header class="header">
+    <nav class="navbar" role="navigation" aria-label="navigation">
+        <div class="navbar-brand">
+            <a href="{{ path('app_home') }}" class="navbar-item">Symfony Security Playground</a>
+        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a class="navbar-item" href="{{ path('app_admin') }}">
+                <span class="icon"><i class="ph-bold ph-lock-key-open"></i></span>
+                <span class="is-hidden is-block-fullhd">Admin</span>
+            </a>
+        {% endif %}
+        <div class="navbar-end">
+            {% if app.user is not null %}
+                <div class="navbar-item">
+                    <a href="{{ path('who_am_i') }}">{{ app.user.username }}</a>
+                </div>
+                <div class="navbar-divider"></div>
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a href="/logout" class="button is-light">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a href="{{ path('app_register') }}" class="button is-primary">
+                            <strong>Sign up</strong>
+                        </a>
+                        <a href="{{ path('app_login') }}" class="button is-light">
+                            Log in
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </nav>
+</header>

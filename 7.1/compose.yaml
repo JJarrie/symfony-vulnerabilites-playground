@@ -19,6 +19,37 @@ services:
       # - ./docker/db/data:/var/lib/postgresql/data:rw
 ###< doctrine/doctrine-bundle ###
 
+  php:
+    build:
+      context: ./.docker/php
+      target: php_base
+    volumes:
+      - .:/srv/app
+
+  nginx:
+    image: nginx:1.28
+    volumes:
+      - ./.docker/nginx/app.conf.template:/etc/nginx/templates/app.conf.template
+      - .:/srv/app
+    depends_on:
+      - php
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.tls=true"
+
+  traefik:
+    image: traefik:v3.4
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.entrypoints=websecure"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./.docker/traefik/traefik.yml:/etc/traefik/traefik.yml:ro"
+    depends_on:
+      - nginx
+
 volumes:
 ###> doctrine/doctrine-bundle ###
   database_data:

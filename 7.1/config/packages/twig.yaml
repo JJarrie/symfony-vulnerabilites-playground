@@ -1,5 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
+    form_themes:
+        - 'form/bulma_layout.html.twig'
 
 when@test:
     twig:

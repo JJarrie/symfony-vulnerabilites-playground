@@ -1,0 +1,13 @@
+form:
+  registration:
+    submit: Submit
+    username:
+      label: Username
+      placeholder: Username
+    password:
+      first:
+        label: Password
+        placeholder: Password
+      second:
+        label: Repeat password
+        placeholder: Repeat password

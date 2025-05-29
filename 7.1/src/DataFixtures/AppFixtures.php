@@ -24,7 +24,7 @@ class AppFixtures extends Fixture
             'username' => 'superadmin',
             'role' => 'ROLE_SUPER_ADMIN',
             'password' => 'superadmin',
-        ]
+        ],
     ];
 
     public function __construct(private readonly UserPasswordHasherInterface $userPasswordHasher)
@@ -35,9 +35,9 @@ class AppFixtures extends Fixture
     {
         foreach (self::USERS_FIXTURES as $userData) {
             $user = new User();
-            $user->setUsername($userData['username']);
-            $user->setRoles([$userData['role']]);
-            $user->setPassword($this->userPasswordHasher->hashPassword($user, $userData['password']));
+            $user->username = $userData['username'];
+            $user->roles = [$userData['role']];
+            $user->password = $this->userPasswordHasher->hashPassword($user, $userData['password']);
             $manager->persist($user);
         }
         $manager->flush();

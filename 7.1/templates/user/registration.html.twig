@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+
+        {{ form_row(form.username) }}
+        {{ form_row(form.password) }}
+
+        <div class="field">
+            <div class="control">
+                <button class="button is-link">{{ 'form.registration.submit'|trans }}</button>
+            </div>
+        </div>
+
+    {{ form_end(form) }}
+{% endblock %}

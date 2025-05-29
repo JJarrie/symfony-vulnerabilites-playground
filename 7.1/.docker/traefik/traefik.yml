@@ -1,0 +1,21 @@
+global:
+  sendAnonymousUsage: false
+
+api:
+  dashboard: true
+
+providers:
+  docker:
+    watch: true
+    exposedByDefault: false
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: "websecure"
+          scheme: "https"
+  websecure:
+    address: ":443"

@@ -3,5 +3,16 @@ services:
 ###> doctrine/doctrine-bundle ###
   database:
     ports:
-      - "5432"
+      - "5432:5432"
 ###< doctrine/doctrine-bundle ###
+
+  nginx:
+    labels:
+      - "traefik.http.routers.app.rule=Host(`ssp.docker.localhost`)"
+
+  traefik:
+    labels:
+      - "traefik.http.routers.api.rule=Host(`traefik.ssp.docker.localhost`)"
+    ports:
+      - "443:443"
+      - "80:80"
