@@ -20,11 +20,6 @@ class AppFixtures extends Fixture
             'role' => 'ROLE_USER',
             'password' => 'user',
         ],
-        [
-            'username' => 'superadmin',
-            'role' => 'ROLE_SUPER_ADMIN',
-            'password' => 'superadmin',
-        ],
     ];
 
     public function __construct(private readonly UserPasswordHasherInterface $userPasswordHasher)

@@ -97,7 +97,7 @@ build: ## Build the Docker images
 install: build start vendor assets/install database/setup database/load ## Build & setup the projet, then start it
 
 start: ## Start the docker stack
-	@COMPOSE_FILES=$(DOCKER_COMPOSE_FILES) $(DOCKER_COMPOSE) up
+	@COMPOSE_FILES=$(DOCKER_COMPOSE_FILES) $(DOCKER_COMPOSE) up -d
 
 stop: ## Stop the docker stack
 	@COMPOSE_FILES=$(DOCKER_COMPOSE_FILES) $(DOCKER_COMPOSE) down --remove-orphans

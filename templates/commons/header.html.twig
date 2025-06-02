@@ -4,10 +4,17 @@
             <a href="{{ path('app_home') }}" class="navbar-item">Symfony Security Playground</a>
         </div>
         {% if is_granted('ROLE_ADMIN') %}
-            <a class="navbar-item" href="{{ path('app_admin') }}">
-                <span class="icon"><i class="ph-bold ph-lock-key-open"></i></span>
-                <span class="is-hidden is-block-fullhd">Admin</span>
-            </a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link" href="{{ path('admin:index') }}">
+                    <span class="icon"><i class="ph-bold ph-lock-key-open"></i></span>
+                    <span class="is-hidden is-block-fullhd">Admin</span>
+                </a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" href="{{ path('admin:users-list') }}">
+                        Users
+                    </a>
+                </div>
+            </div>
         {% endif %}
         <div class="navbar-end">
             {% if app.user is not null %}

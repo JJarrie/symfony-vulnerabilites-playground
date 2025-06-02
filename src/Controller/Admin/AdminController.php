@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/admin', name: 'app_admin')]
+#[Route('/admin', name: 'admin:index')]
 class AdminController extends AbstractController
 {
     public function __invoke(): Response

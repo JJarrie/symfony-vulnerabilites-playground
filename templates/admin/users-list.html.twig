@@ -1,0 +1,36 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+    <h1 class="title">Users</h1>
+    <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Roles</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+               <tr>
+                   <td>{{ user.id }}</td>
+                   <td>{{ user.username }}</td>
+                   <td>{{ user.roles|join(', ') }}</td>
+                    <td>
+                        {# <a href="{{ path('user_edit', {'id': user.id}) }}" class="button is-small is-primary">Edit</a> #}
+                        {% if 'ROLE_ADMIN' not in user.roles %}
+                            <form action="{{ path('admin:promote', {'id': user.id}) }}" method="post">
+                                <button type="submit" class="button is-small is-danger">Promote</button>
+                            </form>
+                        {% else %}
+                            <form action="{{ path('admin:demote', {'id': user.id}) }}" method="post">
+                                <button type="submit" class="button is-small is-warning">Demote</button>
+                            </form>
+                        {% endif %}
+                    </td>
+               </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

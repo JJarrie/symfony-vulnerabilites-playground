@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="container columns is-fluid">
+        <aside class="menu column is-2">
+            <p class="menu-label">Administration</p>
+            <ul class="menu-list">
+                <li>
+                    <a href="{{ path('admin:index') }}">Dashboard</a>
+                </li>
+            </ul>
+            <p class="menu-label">Users</p>
+            <ul class="menu-list">
+                <li>
+                    <a href="{{ path('admin:users-list') }}">List</a>
+                </li>
+            </ul>
+        </aside>
+        <div class="column">
+            {% block body %}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

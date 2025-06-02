@@ -13,11 +13,13 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
+    <body class="container is-fluid">
         {% include 'commons/header.html.twig' %}
-        <main class="container">
-        {% block body %}{% endblock %}
-        </main>
+        {% block main %}
+            <main class="container is-fluid">
+                {% block body %}{% endblock %}
+            </main>
+        {% endblock %}
         <footer class="footer">
             {% block footer %}{% endblock %}
         </footer>
