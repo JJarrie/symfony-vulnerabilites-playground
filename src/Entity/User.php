@@ -29,6 +29,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         set => $this->username = $value;
     }
 
+    /**
+     * @var string[]
+     */
     #[ORM\Column(type: 'json')]
     public array $roles = [] {
         get {

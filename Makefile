@@ -138,7 +138,7 @@ php-cs-fixer: ## Run PHP Coding Standards Fixer
 	@${PHP} bash -c "export PHP_CS_FIXER_IGNORE_ENV=1 && ./vendor/bin/php-cs-fixer fix --allow-risky=yes"
 
 phpstan: ## Run PHPStan
-	@${PHP} ./vendor/bin/phpstan analyse
+	@${PHP} ./vendor/bin/phpstan analyse --memory-limit=1G
 
 
 ##@ Tests

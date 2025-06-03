@@ -14,7 +14,10 @@ class AdminControllerTest extends WebTestCase
 
         /** @var UserRepository $userRepository */
         $userRepository = static::getContainer()->get(UserRepository::class);
+
+        /** @var User $admin */
         $admin = $userRepository->findOneBy(['username' => 'admin']);
+
         $client->loginUser($admin);
 
         $client->request('GET', '/admin');

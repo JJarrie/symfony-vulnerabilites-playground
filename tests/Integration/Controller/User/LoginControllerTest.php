@@ -3,7 +3,6 @@
 namespace App\Tests\Integration\Controller\User;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\env;
 
 class LoginControllerTest extends WebTestCase
 {

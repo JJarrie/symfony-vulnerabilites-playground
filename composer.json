@@ -12,6 +12,7 @@
         "doctrine/doctrine-fixtures-bundle": "^4.1",
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/orm": "3.4.x-dev",
+        "phpstan/phpstan-phpunit": "^2.0",
         "symfony/asset": "7.1.*",
         "symfony/asset-mapper": "7.1.*",
         "symfony/console": "7.1.*",
